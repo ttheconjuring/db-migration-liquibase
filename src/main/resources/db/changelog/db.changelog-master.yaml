@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changesets/cs1_create_table_users.sql
+  - include:
+      file: db/changelog/changesets/cs2_insert_data_in_table_users.sql
+      

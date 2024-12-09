@@ -1,0 +1,52 @@
+services:
+  app:
+    container_name: spring-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/liquibase_migration
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+    depends_on:
+      - db
+    entrypoint: ["sh", "-c", "sleep 30 && java -jar app.jar"]
+
+  liquibase:
+    image: liquibase/liquibase
+    container_name: liquibase-container
+    environment:
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://db:5432/liquibase_migration
+      LIQUIBASE_COMMAND_USERNAME: postgres
+      LIQUIBASE_COMMAND_PASSWORD: 1234
+      LIQUIBASE_COMMAND_CHANGELOG_FILE: db.changelog-master.yaml
+    command: ["sh", "-c", "sleep 20 && liquibase update"]
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  db:
+    image: postgres
+    container_name: postgresql-db
+    environment:
+      POSTGRES_DB: liquibase_migration
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    networks:
+      - app-network
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db-data:

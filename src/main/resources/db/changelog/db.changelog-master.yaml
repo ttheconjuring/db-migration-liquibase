@@ -4,10 +4,10 @@ databaseChangeLog:
       author: pesho
       changes:
         - sqlFile:
-            path: db/changelog/changesets/cs1_create_table_users.sql
+            path: db/changelog/scripts/cs1_create_table_users.sql
   - changeSet:
       id: 2
       author: pesho
       changes:
         - sqlFile:
-            path: db/changelog/changesets/cs2_insert_data_in_table_users.sql
+            path: db/changelog/scripts/cs2_insert_data_in_table_users.sql

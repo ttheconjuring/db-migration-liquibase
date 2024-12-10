@@ -14,7 +14,8 @@ services:
       - app-network
     depends_on:
       - db
-    entrypoint: ["sh", "-c", "sleep 30 && java -jar app.jar"]
+      - liquibase
+    entrypoint: ["sh", "-c", "sleep 20 && java -jar app.jar"]
 
   liquibase:
     image: liquibase/liquibase
@@ -24,7 +25,10 @@ services:
       LIQUIBASE_COMMAND_USERNAME: postgres
       LIQUIBASE_COMMAND_PASSWORD: 1234
       LIQUIBASE_COMMAND_CHANGELOG_FILE: db.changelog-master.yaml
-    command: ["sh", "-c", "sleep 20 && liquibase update"]
+    command: ["sh", "-c", "sleep 15 && liquibase update"]
+    volumes:
+      - /src/main/resources/db/changelog/db.changelog-master.yaml:/liquibase/db.changelog-master.yaml
+      - /src/main/resources/db/changelog/scripts:/liquibase/scripts
     depends_on:
       - db
     networks:
